@@ -75,7 +75,7 @@ function DFS(item: Array<object>) {
   });
   return result.join(',')
 }
-// console.log(DFS(data))
+console.log(DFS(data))
 
 interface child {
   name: string,
@@ -92,21 +92,19 @@ function DFSStack(item: Array<child>) {
   }
   return result.join(',')
 }
-// console.log(DFSStack(data))
-
-
-
+console.log(DFSStack(data))
 
 
 // 非递归实现
 function BFSStack(item: Array<child>) {
   let result: Array<string> = []
-  let queue: Array<child> = item
-  while (queue.length > 0) {
-    let child = queue.shift()
+  let stack: Array<child> = item
+  while (stack.length > 0) {
+    let child = stack.pop()
     result.push(child.name)
-    child.children && queue.push(...child.children)
+    child.children && stack.push(...child.children)
   }
   return result.join(',')
 }
 console.log(BFSStack(data))
+

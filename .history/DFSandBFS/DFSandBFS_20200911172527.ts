@@ -94,19 +94,33 @@ function DFSStack(item: Array<child>) {
 }
 // console.log(DFSStack(data))
 
+// 广度遍历, 创建一个执行队列, 当队列为空的时候则结束
+function getName2(data) {
+  let result = [];
+  let queue = data;
+  while (queue.length > 0) {
+      [...queue].forEach(child => {
+          queue.shift();
+          result.push(child.name);
+          child.children && (queue.push(...child.children));
+      });
+  }
+  return result.join(',');
+}
 
-
-
+console.log(getName2(data));
+// a,b,a1,a2,a3,b1,b2,b3,a11,a12,a21,a22,a31,a32,b11,b12,b21,b22,b31,b32
 
 // 非递归实现
 function BFSStack(item: Array<child>) {
   let result: Array<string> = []
-  let queue: Array<child> = item
-  while (queue.length > 0) {
-    let child = queue.shift()
+  let stack: Array<child> = item
+  while (stack.length > 0) {
+    let child = stack.pop()
     result.push(child.name)
-    child.children && queue.push(...child.children)
+    child.children && stack.push(...child.children)
   }
   return result.join(',')
 }
 console.log(BFSStack(data))
+

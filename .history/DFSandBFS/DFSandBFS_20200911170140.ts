@@ -60,7 +60,7 @@ const data = [
 // //  a,a1,a11,a12,a2,a21,a22,a3,a31,a32,b,b1,b11,b12,b2,b21,b22,b3,b31,b32
 
 // 递归实现
-function DFS(item: Array<object>) {
+function BFS(item: Array<object>) {
   let result = []
   item.forEach(child => {
     let mapItem = (item1) => {
@@ -75,38 +75,21 @@ function DFS(item: Array<object>) {
   });
   return result.join(',')
 }
-// console.log(DFS(data))
+console.log(BFS(data))
 
 interface child {
   name: string,
-  children?: Array<child>
+  child?: Array<child>
 }
 // 非递归实现
-function DFSStack(item: Array<child>) {
+function BFSStack(item: Array<child>) {
   let result: Array<string> = []
   let stack: Array<child> = item
   while (stack.length > 0) {
     let child = stack.pop()
     result.push(child.name)
-    child.children && stack.push(...child.children.reverse())
+    child.child && stack.push(...child.child)
   }
-  return result.join(',')
-}
-// console.log(DFSStack(data))
-
-
-
-
-
-// 非递归实现
-function BFSStack(item: Array<child>) {
-  let result: Array<string> = []
-  let queue: Array<child> = item
-  while (queue.length > 0) {
-    let child = queue.shift()
-    result.push(child.name)
-    child.children && queue.push(...child.children)
-  }
-  return result.join(',')
+  return result
 }
 console.log(BFSStack(data))
