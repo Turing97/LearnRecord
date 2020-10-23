@@ -110,3 +110,31 @@ function BFSStack(item: Array<child>) {
   return result.join(',')
 }
 console.log(BFSStack(data))
+
+// 回溯法 ： 字母大小写全排列
+let str = 'a21d'
+
+function allStr(str) {
+  let result = []
+  let traverse = (res, pre, str, index) => {
+    if(index === str.length) {
+      res.push(pre)
+      // return res
+    } else {
+      if(/\d/.test(str[index])) {
+        traverse(res, pre + str[index], str, index + 1)
+      } else {
+        // let pre = pre + str[index].toLowerCase()
+        // console.log(str)
+        traverse(res, pre + str[index].toLowerCase(), str, index + 1)
+        // pre = pre + str[index].toUpperCase()
+        // console.log(str[index].toUpperCase())
+        traverse(res, pre + str[index].toUpperCase(), str, index + 1)
+      }
+    }
+  }
+  traverse(result, '', str,0)
+  console.log(result)
+  return result
+}
+allStr('a3')

@@ -46,3 +46,174 @@ let flatArr = [1, 2, [3, 4]]
   console.log(stackFlatten(flatArr))
 
   console.log([1,2,3, [4,5,[6,7]]].flat(Infinity))
+
+function add1(arg1,arg2) {
+  return [...arg1].concat(...arg2).reduce((result, item) => {
+    return result + item
+  })
+}
+function currying(fn, ...args) {
+  console.log(fn.length)
+  console.log(args.length)
+  if(args.length >= fn.length) {
+    return function(arg2) {
+      currying(fn,...args,...arg2)
+    }
+  }
+  return fn(...args)
+}
+console.log(currying(add1,1,2))
+
+const curry = (f, args1 = []) => (...args2) => {
+  const args = [ ...args1, ...args2 ]
+  console.log(args)
+  console.log(f.length)
+  return f.length === args.length
+  ? f(...args)
+  : curry(f, args)
+}
+function add(...arg) {
+  // console.log([...arg].length)
+  return [...arg].reduce((result,item) => {return result+item})
+}
+// console.log(add(1,2,3))
+let addCurry = curry(add)
+console.log(addCurry(1)(2)(3))
+
+
+
+
+
+
+console.log([1,2,3].reduce((result,item) => {return result+item}))
+
+
+
+
+console.time('async')
+console.timeLog('async')
+setTimeout(() => {
+  console.timeLog('async')
+  console.timeEnd('async')
+}, 1000);
+console.log('1111')
+console.timeLog('async')
+
+console.log('2222')
+console.timeLog('async')
+
+console.log('3333')
+console.timeLog('async')
+
+
+
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {boolean}
+ */
+var reverseTree = function(root) {
+  if (root === null) return root
+  let temp = root.left
+  root.left = root.right
+  root.right = temp
+  reverseTree(root.left)
+  reverseTree(root.right)
+  return root
+}
+var helper = function(root) {
+  if (root === null) return root
+  if (root.left || root.right) {
+    let stack = [root.left, root.right]
+  }
+  while (stack.length > 0) {
+    let r = stack.pop()
+    let l = stack.pop()
+    [l, r] = [r, l]
+    if (l.left || r.right) {
+      stack.push(l.left)
+      stack.push(r.right)
+    }
+    if (l.right || r.left) {
+      stack.push(l.right)
+      stack.push(r.left)
+    }
+  }
+  return root
+}
+
+
+// 查找和为特定值的两个数
+
+let arr = [1, 2, 4, 10, 3, 12, 9]
+
+function twoSum(arr, target) {
+  let Arrmap = {}
+  let index = 0
+  // for (let item in arr) {
+  //   Arrmap[item] = index
+  //   index++
+  // }
+  // for (let i = 0; i < arr.length; i++) {
+  //   if (Arrmap[target - arr[i]]) {
+  //     console.log([arr[i], target - arr[i]])
+  //   }
+  // }
+  for (let i = 0; i < arr.length; i++) {
+    if (Arrmap[target - arr[i]] > -1) {
+      
+      console.log(arr[i], target - arr[i])
+    }
+    Arrmap[arr[i]] = i
+  }
+}
+
+twoSum(arr, 13)
+
+
+function threeSum(arr, target) {
+  arr.sort()
+  for(let i = 0; i < arr.length; i++) {
+    other = target - arr[i]
+    for(let j = i + 1; j < arr.length; j++) {
+      let k = arr.length - 1
+      while(j < k && arr[j] + arr[k] > other) {
+        k--
+      }
+      if (j == k) {
+        break;
+      }
+      if (arr[j] + arr[k] == other) {
+        console.log(arr[i], arr[j], arr[k])
+      }
+    }
+  }
+}
+let arr = [1,2,3,4,5,6,7,8]
+threeSum(arr, 12)
+
+function threeSum(arr, target) {
+  arr.sort()
+  for(let i = 0; i< arr.length; i++) {
+    other = target - arr[i]
+    for(let j = arr.length - 1; j > i; j--) {
+      let k = i + 1
+      while (k < j && arr[k] + arr[j] < other) {
+        k++
+      }
+      if (k == j) {
+        break;
+      }
+      if (arr[k] + arr[j] === other) {
+        console.log(arr[i], arr[k], arr[j])
+      }
+    }
+  }
+}
