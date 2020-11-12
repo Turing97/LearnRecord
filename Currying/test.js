@@ -128,26 +128,7 @@ var reverseTree = function(root) {
   reverseTree(root.right)
   return root
 }
-var helper = function(root) {
-  if (root === null) return root
-  if (root.left || root.right) {
-    let stack = [root.left, root.right]
-  }
-  while (stack.length > 0) {
-    let r = stack.pop()
-    let l = stack.pop()
-    [l, r] = [r, l]
-    if (l.left || r.right) {
-      stack.push(l.left)
-      stack.push(r.right)
-    }
-    if (l.right || r.left) {
-      stack.push(l.right)
-      stack.push(r.left)
-    }
-  }
-  return root
-}
+
 
 
 // 查找和为特定值的两个数
@@ -177,6 +158,7 @@ function twoSum(arr, target) {
 
 twoSum(arr, 13)
 
+// 查找和为特定值的三个数
 
 function threeSum(arr, target) {
   arr.sort()
@@ -217,3 +199,52 @@ function threeSum(arr, target) {
     }
   }
 }
+
+
+// git 655
+function git655(tree) {
+  if (tree == null) return []
+  let dep = getDep(tree)
+  function getDep(tree) {
+    let res = 1
+    if (tree.left) {
+      return res + getDep(tree.left)
+    }else if (tree.right) {
+      return res + getDep(tree.right)
+    } else {
+      return res
+    }
+  }
+  let result = []
+  for(let i = 0; i < dep; i++) {
+    result.push(Array(Math.pow(2,dep) -1).fill(""))
+  }
+  // 广度搜索
+  function bfs(tree, d, pos) {
+    result[d][pos] = tree.val
+    if (tree.left) {
+      bfs(tree.left, d+1, pos - Math.pow(2, d+1))
+    }
+    if(tree.right) {
+      bfs(tree.left, d+1, pos + Math.pow(2, d+1))
+    }
+  }
+  bfs(tree, 0, (Math.pow(2, dep)/2) -1)
+  return result
+}
+
+// 
+
+// 柯里化
+function currying() {
+  let arg = [...arguments]
+  let tempFun = function () {
+    arg.push(...arguments)
+    return tempFun
+  }
+  tempFun.toString = function() {
+    return arg.reduce((pre, cur) => pre+cur)
+  }
+  return tempFun
+}
+console.log(currying(1)(2))
