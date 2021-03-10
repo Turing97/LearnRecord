@@ -149,7 +149,6 @@ function twoSum(arr, target) {
   // }
   for (let i = 0; i < arr.length; i++) {
     if (Arrmap[target - arr[i]] > -1) {
-      
       console.log(arr[i], target - arr[i])
     }
     Arrmap[arr[i]] = i
