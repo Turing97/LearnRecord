@@ -83,11 +83,7 @@ console.log(addCurry(1)(2)(3))
 
 
 
-
-
 console.log([1,2,3].reduce((result,item) => {return result+item}))
-
-
 
 
 console.time('async')
