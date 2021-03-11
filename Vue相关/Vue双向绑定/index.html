@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>vue 双向绑定</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+  <script src='main.js'></script>
+</head>
+<body>
+  数据<input id="view"></input>
+  <br>
+  <input id="input"/> 
+  <script>
+    // // vue 2.0做法
+    let data
+    let obj = {
+      // data: data
+    }
+    Object.defineProperty(obj, 'data', {
+      get:function(){
+        console.log('get')
+        return data
+      },
+      set: function(val){
+        console.log('set')
+        data = val
+        observe(val)
+      }
+    })
+    function observe(val) {
+      view.value = val
+      input.value = val
+    }
+    input.oninput = (el)=>{
+      obj.data = el.target.value
+      // observe(el.target.value)
+    }
+    setTimeout(()=>{
+      obj['data'] = [1,2,3]
+    }, 1000)
+
+    // vue 3.0 proxy
+    let obj = {}
+    handler = {
+      get: (obj, prop) => {
+        console.log('get')
+        return obj[prop] ? obj[prop]: 'has no value'
+      },
+      set: (obj, prop, value) => {
+        console.log('set')
+        obj[prop] =value
+        observe(value)
+      }
+    }
+    let objPro = new Proxy(obj,handler)
+    setTimeout(()=> {
+      objPro.data = '111'
+    }, 1000)
+    function observe(val) {
+      view.value = val
+      input.value = val
+    }
+    input.oninput = (el)=>{
+      // observe(el.target.value)
+      objPro.data = el.target.value
+    }
+  </script>
+</body>
+</html>
