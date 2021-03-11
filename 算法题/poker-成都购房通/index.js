@@ -41,111 +41,167 @@ const fs = require('fs')
 
 // 返回数字
 function getNumber(val) {
-  if(val == 'A') return 1
-  if(!isNaN(parseInt(val))) {
-    return parseInt(val)
-  } 
-  return 10
+    if (val == 'A') return 1
+    if (!isNaN(parseInt(val))) {
+        return parseInt(val)
+    }
+    return 10
 }
 // 返回去除花色数字数组
 function getCardValue(str) {
-  let res = []
-  for(let i = 1; i < str.length; i = i+2) {
-    res.push(getNumber(str[i]))
-  }
-  return res
+    let res = []
+    for (let i = 1; i < str.length; i = i + 2) {
+        res.push(getNumber(str[i]))
+    }
+    return res
 }
 // 获取两个数加起来和为target
 function twoSum(arr, sta, target) {
-  let res = []
-  let start = sta,
-      end = arr.length-1;
-  while(start < end) {
-    let left = arr[start],
-        right = arr[end]
-    if((left + right) > target) {
-      while(right === arr[end]) {
-        end--
-      }
-    } else if((left + right) < target) {
-      while(left === arr[start]) {
-        start++
-      }
-    } else {
-      res.push([left, right])
-      while(left === arr[start]) {
-        start++
-      }
-      while(right === arr[end]) {
-        end--
-      }
+    let res = []
+    let start = sta,
+        end = arr.length - 1;
+    while (start < end) {
+        let left = arr[start],
+            right = arr[end]
+        if ((left + right) > target) {
+            while (right === arr[end]) {
+                end--
+            }
+        } else if ((left + right) < target) {
+            while (left === arr[start]) {
+                start++
+            }
+        } else {
+            res.push([start, end])
+            while (left === arr[start]) {
+                start++
+            }
+            while (right === arr[end]) {
+                end--
+            }
+        }
     }
-  }
-  return res
+    return res
 }
 
 // 三个数加起来为target
 function threeSum(arr, target) {
-  arr = arr.sort()
-  let res = []
-  for(let i = 0; i < arr.length-1; i++) {
-    let tempTarget = target - getNumber(arr[i])
-    if(twoSum(arr, i+1, tempTarget).length > 0) {
-      res.push([arr[i]].concat(...twoSum(arr, i+1, tempTarget)))
+    arr = arr.sort()
+    let res = []
+    for (let i = 0; i < arr.length - 1; i++) {
+        let tempTarget = target - getNumber(arr[i])
+        if (twoSum(arr, i + 1, tempTarget).length > 0) {
+            res.push([i].concat(...twoSum(arr, i + 1, tempTarget)))
+        }
     }
-  }
-  return res
+    return res
 }
 // 读取文件
 // 封装promise读取文件
 let myReadFile = function(src) {
-  return new Promise((resolve, reject) =>{
-    fs.readFile(src, 'utf8' , (err, data) => {
-      if (err) {
-        reject(err)
-        return
-      }
-      resolve(data)
+    return new Promise((resolve, reject) => {
+        fs.readFile(src, 'utf8', (err, data) => {
+            if (err) {
+                reject(err)
+                return
+            }
+            resolve(data)
+        })
     })
-  })
+}
+let Enum = {
+        'A': 1,
+        'J': 11,
+        'Q': 12,
+        'K': 13
+    }
+    // 排序字符串与分数
+function sortHand(str) {
+    let res = ''
+    let tempStr = ''
+    for (let i = 0; i < str.length - 1; i = i + 2) {
+        tempStr = tempStr + str[i] + str[i + 1] + ','
+    }
+    res = tempStr.split(',').sort((a, b) => {
+        let left = Enum[a[1]] ? Enum[a[1]] : a[1]
+        let right = Enum[b[1]] ? Enum[b[1]] : b[1]
+        return left - right
+    }).join('')
+    return res
 }
 
-
-
-// 将序列转化为数组
-myReadFile('LJ-poker.txt').then(res =>{
-  // let arr = res.split(";").join('\n').split("\n")
-  let arr = 'C9D7D9S7D2;HAC5S8D8C10;DQSJD8C4DA;H3C9H7D6S2;S5HAHJS9DQ;D3S7C6D6S3;C8CKS9H6;D4S8HQC2DA;C9D7D9S7D2;HAC5S8D8C10;C7H9D6S2D9;S7S9D10D3C7;D6D8C8S10C5;CKH9S6S7H3;DQSJD8C4DA;H3C9H7D6S2;S5HAHJS9DQ;D3S7C6D6S3;H5S8D7S2;C3S7S9S3S5;D9DAD5H10;S2C5H5DKH9;D3S6C7DJDQ;D8C8D2H7C6'.split(";")
-  let leon = [],
-      judy = []
-  arr.forEach((item, index) => {
-    if(index % 2) {
-      judy.push(item)
+function getScore(str, cardArr, arr) {
+    if (arr.length == 0) {
+        return 0
     } else {
-      leon.push(item)
+        // 计算手牌总和
+        let total = 0
+        cardArr.forEach(item => {
+                total += item
+            })
+            // 获取所有的和为10倍数的情况
+        let minus = []
+        arr.forEach(item => {
+            let temp = 0
+            item.forEach(i => {
+                temp += cardArr[i]
+            })
+            minus.push(temp)
+        })
+        let res = -1;
+        for (let i = 0; i < minus.length; i++) {
+            let temres = total - minus[i]
+            if (temres == 10) {
+                res = 10
+            } else {
+                res = temres % 10
+            }
+        }
+        return res
     }
-  });
-  // 遍历judy和leon的手牌
-  let leonMap = {}
-  let judyMap = {}
-  for(let i = 0; i < leon.length; i++) {
-    if(leon[i].length != 10 || judy[i].length != 10 ) {
-      continue;
-    }
-    // 去除花色显示
-    let leonHand = getCardValue(leon[i])
-    let judyHand = getCardValue(judy[i])
-    // 寻找three sum
+}
+// 将序列转化为数组
+myReadFile('LJ-poker.txt').then(res => {
+    // console.log(res)
+    let arr = res.split(";").join('\n').split("\n")
+        // let arr = 'C9D7D9S7D2;HAC5S8D8C10;DQSJD8C4DA;H3C9H7D6S2;S5HAHJS9DQ;D3S7C6D6S3;C8CKS9H6;D4S8HQC2DA;C9D7D9S7D2;HAC5S8D8C10;C7H9D6S2D9;S7S9D10D3C7;D6D8C8S10C5;CKH9S6S7H3;DQSJD8C4DA;H3C9H7D6S2;S5HAHJS9DQ;D3S7C6D6S3;H5S8D7S2;C3S7S9S3S5;D9DAD5H10;S2C5H5DKH9;D3S6C7DJDQ;D8C8D2H7C6'.split(";")
+    let leon = [],
+        judy = []
+    arr.forEach((item, index) => {
+        if (index % 2) {
+            judy.push(item)
+        } else {
+            leon.push(item)
+        }
+    });
+    // 遍历judy和leon的手牌
+    let leonMap = {}
+    let judyMap = {}
+    for (let i = 0; i < leon.length; i++) {
+        if (leon[i].length != 10 || judy[i].length != 10) {
+            continue;
+        }
+        // 去除花色显示
+        let leonHand = getCardValue(sortHand(leon[i]))
+        let judyHand = getCardValue(sortHand(judy[i]))
+            // console.log(judyHand)
+            // 寻找three sum
+        leonMap[i] = threeSum(leonHand, 10).concat(threeSum(leonHand, 20)).concat(threeSum(leonHand, 30))
 
-    judyMap[i] = threeSum(judyHand, 10).concat(threeSum(judyHand, 20)).concat(threeSum(judyHand, 30))
-    leonMap[i] = threeSum(leonHand, 10).concat(threeSum(leonHand, 20)).concat(threeSum(leonHand, 30))
-  }
-  console.log(leonMap)
-  console.log(judyMap)
-  // 通过map中保存的对战数据进行比较
-  
+        judyMap[i] = threeSum(judyHand, 10).concat(threeSum(judyHand, 20)).concat(threeSum(judyHand, 30))
+        let leonScore = getScore(sortHand(leon[i]), leonHand, leonMap[i])
+        let judyScore = getScore(sortHand(judy[i]), judyHand, judyMap[i])
+        console.log(leonScore)
+        console.log(judyScore)
+            // 判断同分情况
+
+    }
+    // console.log(leonMap)
+    // console.log(judyMap)
+    // 获取分数
+    // 通过map中保存的对战数据进行比较
 
 
 }).catch(err => {
-  console.log(err)
+    console.log(err)
 })
