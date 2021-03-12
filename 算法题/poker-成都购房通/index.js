@@ -115,6 +115,12 @@ let Enum = {
         'Q': 12,
         'K': 13
     }
+let TypeEnum = {
+      'S': 3,
+      'H': 2,
+      'C': 1,
+      'D': 0
+  }
     // 排序字符串与分数
 function sortHand(str) {
     let res = ''
@@ -160,11 +166,37 @@ function getScore(str, cardArr, arr) {
         return res
     }
 }
+// 判断手牌大小
+function getWinOrLose(leonHand, judyHand) {
+  
+  let leonLastHand= sortHand(leonHand).substr(8,2)
+  let judyLastHand = sortHand(judyHand).substr(8,2)
+  // let left = Enum[a[1]] ? Enum[a[1]] : a[1]
+  // let right = Enum[b[1]] ? Enum[b[1]] : b[1]
+  console.log(leonLastHand)
+  console.log(judyLastHand)
+  // if(leonSortedHand[9] > judySHand[9]){}
+  if((Enum[leonLastHand[1]] ? Enum[leonLastHand[1]] : leonLastHand[1]) > (Enum[judyLastHand[1]] ? Enum[judyLastHand[1]] : judyLastHand[1])) {
+    console.log('1111')
+    return true
+  } else if((Enum[leonLastHand[1]] ? Enum[leonLastHand[1]] : leonLastHand[1]) < (Enum[judyLastHand[1]] ? Enum[judyLastHand[1]] : judyLastHand[1])) {
+    console.log('22222')
+    
+    return false
+  } else {
+    if(TypeEnum[leonLastHand[0]] > TypeEnum[judyLastHand[0]]) {
+      console.log('33333')
+      return true
+    }else{
+      console.log('44444')
+      return false
+    }
+  }
+}
 // 将序列转化为数组
 myReadFile('LJ-poker.txt').then(res => {
     // console.log(res)
     let arr = res.split(";").join('\n').split("\n")
-        // let arr = 'C9D7D9S7D2;HAC5S8D8C10;DQSJD8C4DA;H3C9H7D6S2;S5HAHJS9DQ;D3S7C6D6S3;C8CKS9H6;D4S8HQC2DA;C9D7D9S7D2;HAC5S8D8C10;C7H9D6S2D9;S7S9D10D3C7;D6D8C8S10C5;CKH9S6S7H3;DQSJD8C4DA;H3C9H7D6S2;S5HAHJS9DQ;D3S7C6D6S3;H5S8D7S2;C3S7S9S3S5;D9DAD5H10;S2C5H5DKH9;D3S6C7DJDQ;D8C8D2H7C6'.split(";")
     let leon = [],
         judy = []
     arr.forEach((item, index) => {
@@ -173,10 +205,19 @@ myReadFile('LJ-poker.txt').then(res => {
         } else {
             leon.push(item)
         }
+        
     });
+    console.log(judy.length, '11111111111111')
+    console.log(leon.length, '11111111111111')
+    
+    console.log(judy[257], '11111111111111')
+    console.log(leon[257], '11111111111111')
+
     // 遍历judy和leon的手牌
     let leonMap = {}
     let judyMap = {}
+    console.log(leon[2987], judy[2987])
+
     for (let i = 0; i < leon.length; i++) {
         if (leon[i].length != 10 || judy[i].length != 10) {
             continue;
@@ -186,13 +227,42 @@ myReadFile('LJ-poker.txt').then(res => {
         let judyHand = getCardValue(sortHand(judy[i]))
             // console.log(judyHand)
             // 寻找three sum
-        leonMap[i] = threeSum(leonHand, 10).concat(threeSum(leonHand, 20)).concat(threeSum(leonHand, 30))
+            let leonArr = threeSum(leonHand, 10).concat(threeSum(leonHand, 20)).concat(threeSum(leonHand, 30))
+            let judyArr = threeSum(judyHand, 10).concat(threeSum(judyHand, 20)).concat(threeSum(judyHand, 30))
+            // leonMap[i] = threeSum(leonHand, 10).concat(threeSum(leonHand, 20)).concat(threeSum(leonHand, 30))
+            // judyMap[i] = threeSum(judyHand, 10).concat(threeSum(judyHand, 20)).concat(threeSum(judyHand, 30))
+        let leonScore = getScore(sortHand(leon[i]), leonHand, leonArr)
+        let judyScore = getScore(sortHand(judy[i]), judyHand, judyArr)
 
-        judyMap[i] = threeSum(judyHand, 10).concat(threeSum(judyHand, 20)).concat(threeSum(judyHand, 30))
-        let leonScore = getScore(sortHand(leon[i]), leonHand, leonMap[i])
-        let judyScore = getScore(sortHand(judy[i]), judyHand, judyMap[i])
-        console.log(leonScore)
-        console.log(judyScore)
+        leonMap[i] = {
+          "index": i,
+          "handCard":leon[i],
+          "score":leonScore
+        }
+        judyMap[i] = {
+          "index": i,
+          "handCard":judy[i],
+          "score":judyScore
+        }
+        // 判断谁手牌大
+
+        if(leonScore > judyScore) {
+          // leon手牌大
+          leonMap[i]['win'] = true
+          judyMap[i]['win'] = false
+        } else if(leonScore < judyScore){
+          leonMap[i]['win'] = false
+          judyMap[i]['win'] = true
+        } else {
+          let leonWin = getWinOrLose(leon[i], judy[i])
+          console.log(leonWin, i)
+          
+          leonMap[i]['win'] = leonWin
+          judyMap[i]['win'] = !leonWin
+        }
+
+        // console.log(leonScore)
+        // console.log(judyScore)
             // 判断同分情况
 
     }
