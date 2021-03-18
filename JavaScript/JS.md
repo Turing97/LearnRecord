@@ -72,8 +72,8 @@ Array.from(new Array(10).keys())
 ```
 
 
-```
-// 原型链
+
+## 原型链
 每个构造函数(constructor)都有一个原型对象(prototype),原型对象都包含一个指向构造函数的指针,而实例(instance)都包含一个指向原型对象的内部指针.
 
 创建函数对象
@@ -120,7 +120,7 @@ graph LR;
   Object-Fun--constructor-->Function-Fun
   Object-Fun--prototype-->Object.prototype
 ~~~
-// js继承
+## js继承
 寄生继承
 function father(val) {
   this.name = val
@@ -241,7 +241,7 @@ function myInstanceOf(left, right) {
 }
 
 
-手写new
+## 手写new
 
 function myNew(obj, ...args) {
   let newObj = {}

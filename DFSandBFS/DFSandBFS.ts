@@ -64,7 +64,6 @@ function DFS(item: Array<object>) {
   let result = []
   item.forEach(child => {
     let mapItem = (item1) => {
-
       result.push(item1.name)
       item1.children && item1.children.forEach(element => {
         mapItem(element)
@@ -137,4 +136,24 @@ function allStr(str) {
   console.log(result)
   return result
 }
-allStr('a3')
+allStr(str)
+
+
+// 全排列问题 求[1,2,3]的全排列
+
+function fullPos(arr, res) {
+  
+  if (arr.length <= 2) {
+    res.push([arr[0], arr[1]])
+    res.push([arr[1], arr[0]])
+    return res
+  } else {
+    arr.forEach((element) => {
+      res.push(element)
+      res = fullPos(arr.filter(item => item != element), res.concat([element]))
+      return res
+    });
+  }
+  return res
+}
+console.log(fullPos([1,2,3], []))
