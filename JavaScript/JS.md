@@ -120,7 +120,7 @@ graph LR;
   Object-Fun--constructor-->Function-Fun
   Object-Fun--prototype-->Object.prototype
 ~~~
-## js继承
+## js继承 
 寄生继承
 function father(val) {
   this.name = val
