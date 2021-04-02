@@ -1,0 +1,17 @@
+.card {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 10%;
+  background-color: white;
+  box-shadow:2px 2px 15px gray;
+}
+.card-layout {
+  /* 垂直水平居中 */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-0.5rem, -0.5rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
